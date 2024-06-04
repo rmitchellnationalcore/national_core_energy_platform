@@ -1,0 +1,143 @@
+// This is the Prisma schema for the PostgreSQL database.
+// Not all fields are added yet, not all tables are added yet,
+// Some fields still need to be marked optional.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id              Int       @id @default(autoincrement())
+  fullname        String
+  email           String    @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  isAdmin         Boolean   @default(false)
+  emailVerifiedAt DateTime?
+}
+
+model UtilityCompanies {
+  id          Int        @id @default(autoincrement())
+  utilityName String
+  type        Type
+  accounts    Accounts[]
+}
+
+model Developments {
+  id              Int         @id @default(autoincrement())
+  developmentName String
+  buildings       Buildings[]
+}
+
+model Buildings {
+  id            Int          @id @default(autoincrement())
+  buildingName  String
+  developmentId Int
+  developments  Developments @relation(fields: [developmentId], references: [id])
+  accounts      Accounts[]   @relation("BuildingsAccounts")
+}
+
+model Accounts {
+  id               Int              @id @default(autoincrement())
+  accountNumber    Int
+  closed           Boolean
+  coverage         String
+  hasLogin         Boolean
+  isImporting      Boolean
+  isViewOnly       Boolean
+  nickName         String
+  status           String
+  tentantPays      Boolean
+  utilityCompanyId Int
+  utilityCompany   UtilityCompanies @relation(fields: [utilityCompanyId], references: [id])
+  buildings        Buildings[]      @relation("BuildingsAccounts")
+  lastDataPoint    DateTime?
+  billingInterval  Int?
+  statements       Statements[]
+}
+
+enum Type {
+  Water
+  Gas
+  Electric
+}
+
+model Statements {
+  id                  Int      @id @default(autoincrement())
+  endDate             DateTime
+  startDate           DateTime
+  originalValue       Int
+  originalMeasureUnit String
+  totalCharge         Float
+  dueDate             DateTime
+  invoiceDate         DateTime
+  serviceAddress      String
+  accountNumber       Int
+  account             Accounts @relation(fields: [accountNumber], references: [id])
+  customerCharge      Float?
+  serviceCharge       Float?
+  lateCharge          Float?
+  balanceForward      Float?
+  billingAdjustment   Float?
+  amountDue           Float?
+  invoiceNumber       Int?
+  rateCode            String?
+
+  type       Type
+  waterId    Int?      @unique
+  gasId      Int?      @unique
+  electricId Int?      @unique
+  water      Water?
+  gas        Gas?
+  electric   Electric?
+}
+
+model Water {
+  id                  Int        @id @default(autoincrement())
+  ccf                 Float
+  waterCharge         Float
+  sewerCharge         Float
+  sewerServicesCharge Float
+  waterServiceCharges Float
+  pricePerGallon      Float
+  pricePerCCF         Float
+  statementId         Int        @unique
+  statement           Statements @relation(fields: [statementId], references: [id])
+}
+
+model Gas {
+  id             Int        @id @default(autoincrement())
+  btu            Int
+  therms         Float
+  supplyCharge   Float
+  deliveryCharge Float
+  energyCharge   Float
+  pricePerBTU    Float
+  pricePerTherm  Float
+  serviceCharge  Float
+  statementId    Int        @unique
+  statement      Statements @relation(fields: [statementId], references: [id])
+}
+
+model Electric {
+  id                    Int    @id @default(autoincrement())
+  kWh                   Float
+  supplyCharge          Float
+  deliveryCharge        Float
+  demandCharge          Float
+  solarGenerationCharge Float?
+  solarGenerationCredit Float?
+  pricePerkWh           Float
+  kWhPurchased          Float
+  kWhExported           Float
+  kVa                   Float
+  rateCode              String
+  serviceCharge         Float
+
+  statementId Int        @unique
+  statement   Statements @relation(fields: [statementId], references: [id])
+}
