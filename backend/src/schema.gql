@@ -1,0 +1,67 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  fullname: String!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isAdmin: Boolean!
+  emailVerifiedAt: DateTime
+  password: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type registerUserReturnType {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  email: String!
+  role: String!
+}
+
+type loginUserReturnType {
+  value: String!
+}
+
+type Query {
+  FetchUser: User!
+  getPublicMessage: String!
+  getPrivateMessage: String!
+  getAdminMessage: String!
+}
+
+type Mutation {
+  CreateUser(createUserData: CreateUserInput!): User!
+  DeleteUser: User!
+  UpdateUser: User!
+  registerUser(userData: registerUserInput!): registerUserReturnType!
+  loginUser(userData: loginUserInput!): loginUserReturnType!
+}
+
+input CreateUserInput {
+  fullname: String!
+  email: String!
+  password: String!
+  confirmPassword: String!
+}
+
+input registerUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  confirmationPassword: String!
+  role: String!
+}
+
+input loginUserInput {
+  email: String!
+  password: String!
+}

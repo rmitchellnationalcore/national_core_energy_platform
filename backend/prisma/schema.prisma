@@ -18,6 +18,7 @@ model Users {
   updatedAt       DateTime  @updatedAt
   isAdmin         Boolean   @default(false)
   emailVerifiedAt DateTime?
+  password        String
 }
 
 model UtilityCompanies {
@@ -44,14 +45,14 @@ model Buildings {
 model Accounts {
   id               Int              @id @default(autoincrement())
   accountNumber    Int
-  closed           Boolean
-  coverage         String
-  hasLogin         Boolean
-  isImporting      Boolean
-  isViewOnly       Boolean
-  nickName         String
-  status           String
-  tentantPays      Boolean
+  closed           Boolean?
+  coverage         String?
+  hasLogin         Boolean?
+  isImporting      Boolean?
+  isViewOnly       Boolean?
+  nickName         String?
+  status           String?
+  tentantPays      Boolean?
   utilityCompanyId Int
   utilityCompany   UtilityCompanies @relation(fields: [utilityCompanyId], references: [id])
   buildings        Buildings[]      @relation("BuildingsAccounts")
@@ -67,17 +68,17 @@ enum Type {
 }
 
 model Statements {
-  id                  Int      @id @default(autoincrement())
+  id                  Int       @id @default(autoincrement())
   endDate             DateTime
   startDate           DateTime
-  originalValue       Int
-  originalMeasureUnit String
+  originalValue       Int?
+  originalMeasureUnit String?
   totalCharge         Float
-  dueDate             DateTime
-  invoiceDate         DateTime
-  serviceAddress      String
+  dueDate             DateTime?
+  invoiceDate         DateTime?
+  serviceAddress      String?
   accountNumber       Int
-  account             Accounts @relation(fields: [accountNumber], references: [id])
+  account             Accounts  @relation(fields: [accountNumber], references: [id])
   customerCharge      Float?
   serviceCharge       Float?
   lateCharge          Float?
@@ -99,12 +100,12 @@ model Statements {
 model Water {
   id                  Int        @id @default(autoincrement())
   ccf                 Float
-  waterCharge         Float
-  sewerCharge         Float
-  sewerServicesCharge Float
-  waterServiceCharges Float
-  pricePerGallon      Float
-  pricePerCCF         Float
+  waterCharge         Float?
+  sewerCharge         Float?
+  sewerServicesCharge Float?
+  waterServiceCharges Float?
+  pricePerGallon      Float?
+  pricePerCCF         Float?
   statementId         Int        @unique
   statement           Statements @relation(fields: [statementId], references: [id])
 }
@@ -112,31 +113,31 @@ model Water {
 model Gas {
   id             Int        @id @default(autoincrement())
   btu            Int
-  therms         Float
-  supplyCharge   Float
-  deliveryCharge Float
-  energyCharge   Float
-  pricePerBTU    Float
-  pricePerTherm  Float
-  serviceCharge  Float
+  therms         Float?
+  supplyCharge   Float?
+  deliveryCharge Float?
+  energyCharge   Float?
+  pricePerBTU    Float?
+  pricePerTherm  Float?
+  serviceCharge  Float?
   statementId    Int        @unique
   statement      Statements @relation(fields: [statementId], references: [id])
 }
 
 model Electric {
-  id                    Int    @id @default(autoincrement())
+  id                    Int     @id @default(autoincrement())
   kWh                   Float
-  supplyCharge          Float
-  deliveryCharge        Float
-  demandCharge          Float
+  supplyCharge          Float?
+  deliveryCharge        Float?
+  demandCharge          Float?
   solarGenerationCharge Float?
   solarGenerationCredit Float?
-  pricePerkWh           Float
-  kWhPurchased          Float
-  kWhExported           Float
-  kVa                   Float
-  rateCode              String
-  serviceCharge         Float
+  pricePerkWh           Float?
+  kWhPurchased          Float?
+  kWhExported           Float?
+  kVa                   Float?
+  rateCode              String?
+  serviceCharge         Float?
 
   statementId Int        @unique
   statement   Statements @relation(fields: [statementId], references: [id])

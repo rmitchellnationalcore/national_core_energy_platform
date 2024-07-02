@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common'
-import { PrismaService } from './prisma/prisma.service'
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AppService { 
-    constructor(private prisma:PrismaService){
+export class AppService {
+  getPublicMessage(): string {
+    return 'This message is public to all!';
+  }
 
-    }
-    getHello(): string {
-        return this.prisma.users;
-    }
+  getPrivateMessage(): string {
+    return 'You can only see this if you are authenticated';
+  }
+
+  getAdminMessage(): string {
+    return 'You can only see this if you are an admin';
+  }
 }
