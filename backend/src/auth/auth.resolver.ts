@@ -6,7 +6,7 @@ import { LoginUserDto } from './models/login-user.dto';
 import { RegisterUserDto } from './models/register-user.dto';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { Request } from 'express';
-import { loginUserInput, loginUserReturnType, registerUserInput, registerUserReturnType } from 'src/types';
+import { loginUserInput, loginUserReturnType, registerUserInput, registerUserReturnType, returnUserType } from 'src/types';
 
 @Resolver()
 export class AuthResolver{
@@ -22,13 +22,31 @@ export class AuthResolver{
     }
 
     @UseGuards(LocalGuard)
-    @Mutation((returns) => loginUserReturnType)
+    @Mutation((returns) => returnUserType)
     async loginUser(
         @Args('userData') user: loginUserInput,
         @Context() ctx: any,
     ) {
-        console.log(ctx.req.session)
-        return ctx.req.session;
-    }
+        console.log("SESSIONS IS ")
+        console.log(ctx.res)
+        console.log("THAT'S THE SESSION BEING RETURNED!") 
+        console.log(ctx.req.session.cookie   )
+        ctx.res.cookie('rt', ctx.req.session)
+        const {id, firstName, lastName, email, role} = ctx.req.user  
+    //     console.log({
+    //         id: id,
+    //         firstName: firstName,
+    //         lastName: lastName,
+    //         email: email,
+    //         role: role
+    // })   
+        return {
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            role: role
+    } 
 
+}
 }

@@ -30,7 +30,11 @@ type RedisClient = ReturnType<typeof createClient>;
     driver: ApolloDriver,
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     context: ({ req, res}) => ({ req, res}),
-    playground: true,
+    playground: {
+      settings: {
+        'request.credentials': 'include'
+      }
+    },
   }), 
   UsersModule,
   AuthModule, RedisModule],

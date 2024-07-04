@@ -17,6 +17,9 @@ export class AuthController {
   @UseGuards(LocalGuard)
   @Post('login')
   loginUser(@Req() req, @Body() user: LoginUserDto) {
+    console.log("SESSIONS IS ")
+    console.log(req.session)
+    console.log("THAT'S THE SESSION BEING RETURNED!")
     return req.session;
   }
 }

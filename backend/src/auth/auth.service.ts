@@ -52,9 +52,9 @@ export class AuthService {
     }
     const { confirmationPassword: _, ...newUser } = user;
     this.users.push({
+      id: this.users.length + 1,
       ...newUser,
       password: await hash(user.password, 12),
-      id: this.users.length + 1,
     });
     return {
       id: this.users.length,

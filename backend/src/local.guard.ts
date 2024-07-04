@@ -150,12 +150,12 @@
 // }
 
 
-import { ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
-import { Observable } from "rxjs";
-import { AuthService } from "./auth/auth.service"
-import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
+// import { ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+// import { AuthGuard } from "@nestjs/passport";
+// import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
+// import { Observable } from "rxjs";
+// import { AuthService } from "./auth/auth.service"
+// import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
 // @Injectable()
 // export class LocalGuard extends AuthGuard('local') {
 //     constructor() {
@@ -168,8 +168,8 @@ import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-hos
 //         return req;
 //       }
 
-@Injectable()
-export class LocalGuard extends AuthGuard('local') {
+// @Injectable()
+// export class LocalGuard extends AuthGuard('local') {
 
 
     //     constructor() {
@@ -182,22 +182,22 @@ export class LocalGuard extends AuthGuard('local') {
     //     return req;
     //   }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+//   async canActivate(context: ExecutionContext): Promise<boolean> {
 
 
-    const ctx = context.getType() === 'http' ? context.switchToHttp().getRequest() : GqlExecutionContext.create(context).getContext().req;
-    console.log(ctx)
-    const result = (await super.canActivate(new ExecutionContextHost([ctx]))) as boolean;
+    // const ctx = context.getType() === 'http' ? context.switchToHttp().getRequest() : GqlExecutionContext.create(context).getContext().req;
+    // console.log(ctx)
+    // const result = (await super.canActivate(new ExecutionContextHost([ctx]))) as boolean;
 
     // const result = (await super.canActivate(context)) as boolean;
-    console.log("MADE IT PAST RESULT")
+    // console.log("MADE IT PAST RESULT")
     // const ctx = GqlExecutionContext.create(context);
 
     // const result = (await super.canActivate(GqlExecutionContext.create(context))) as boolean;
     // const { req } = ctx.getContext();
-    await super.logIn(context.switchToHttp().getRequest());
-    return result;
-  }
+//     await super.logIn(context.switchToHttp().getRequest());
+//     return result;
+//   }
 
 
 //   getRequest(context: ExecutionContext) {
@@ -209,7 +209,7 @@ export class LocalGuard extends AuthGuard('local') {
 //       return gqlReq;
 //     }
 //   }
-}
+
 
 
 
@@ -311,3 +311,30 @@ export class LocalGuard extends AuthGuard('local') {
 //         return user
 //     }
 // }
+
+
+import { ExecutionContext, Injectable } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { AuthGuard } from '@nestjs/passport';
+@Injectable()
+export class LocalGuard extends AuthGuard('local') {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const result = (await super.canActivate(context)) as boolean;
+    const ctx = GqlExecutionContext.create(context);
+    const { req } = ctx.getContext();
+    await super.logIn(req);
+    return result;
+  }
+
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    const gqlReq = ctx.getContext().req;
+    if (gqlReq) {
+        const  email = ctx.getArgs()['userData'].email
+        const  password = ctx.getArgs()['userData'].password
+        gqlReq.body = { email, password };
+        console.log(gqlReq.body)
+    return gqlReq;
+    }
+  }
+}

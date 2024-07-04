@@ -9,6 +9,20 @@ export class appResolverMessageType {
 }
 
 @ObjectType()
+export class returnUserType {
+    @Field((type) => Int)
+    id: number;
+    @Field()
+    firstName: string;
+    @Field()
+    lastName: string;
+    @Field()
+    email: string;
+    @Field()
+    role: string;
+}
+
+@ObjectType()
 export class registerUserReturnType {
     
     @Field((type) => Int)
@@ -32,8 +46,8 @@ export class registerUserReturnType {
 @ObjectType()
 export class loginUserReturnType {
 
-    @Field()
-    value: string;
+    @Field((type) => returnUserType, { nullable: true})
+    user: returnUserType
 
 }
 
