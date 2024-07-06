@@ -4,6 +4,7 @@ import { compare, hash } from 'bcrypt';
 import { LoginUserDto } from './models/login-user.dto';
 import { RegisterUserDto } from './models/register-user.dto';
 import { User } from './models/user.interface';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,6 @@ export class AuthService {
   
 
   async validateUser(user: LoginUserDto) {
-    console.log(this.users)
 
     const foundUser = this.users.find(u => u.email === user.email);
     if (!user || !(await compare(user.password, foundUser.password))) {
@@ -43,7 +43,6 @@ export class AuthService {
 
   async registerUser(user: RegisterUserDto): Promise<Omit<User, 'password'>> {
     const existingUser = this.users.find(u => u.email === user.email);
-    console.log(this.users)
     if (existingUser) {
       throw new BadRequestException('User remail must be unique');
     }
@@ -72,4 +71,12 @@ export class AuthService {
     }
     return user;
   }
+
+
+
+
+
+
+
+
 }

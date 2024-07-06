@@ -30,6 +30,7 @@ const bootstrap = async () => {
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   })
   app.use(cookieParser())
+  
   const logger = app.get(Logger);
   await app.listen(3000);
   logger.log(`Application listening at ${await app.getUrl()}`);

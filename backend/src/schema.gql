@@ -47,6 +47,8 @@ type Mutation {
   UpdateUser: User!
   registerUser(userData: registerUserInput!): registerUserReturnType!
   loginUser(userData: loginUserInput!): returnUserType!
+  logOut: Boolean!
+  refreshSession: Boolean!
 }
 
 input CreateUserInput {

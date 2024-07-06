@@ -20,6 +20,7 @@ import { RedisModule } from './redis/redis.module';
 import { AppResolver } from './app.resolver';
 import { AuthResolver } from './auth/auth.resolver';
 import { AuthService } from './auth/auth.service';
+import { Request, Response } from 'express';
 
 type RedisClient = ReturnType<typeof createClient>;
 
@@ -29,7 +30,7 @@ type RedisClient = ReturnType<typeof createClient>;
     GraphQLModule.forRoot<ApolloDriverConfig>({
     driver: ApolloDriver,
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    context: ({ req, res}) => ({ req, res}),
+    context: ({ req, res}): {req: Request; res: Response} => ({ req, res}),
     playground: {
       settings: {
         'request.credentials': 'include'
